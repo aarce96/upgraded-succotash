@@ -1,4 +1,4 @@
-var codingQuestions = [
+var questions = [
   {
     question: "Commonly used data types DO NOT include:",
     answers: ["1. Strings", "2. Booleans", "3. Alerts", "4. Numbers"],

@@ -4,21 +4,21 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
     <title>Coding Quiz!</title>
   </head>
+
   <body>
-    <input type="button" value="View High Scores" id="viewScores"/>
-    <div id="time">Time: 0</div>
-
-    <div id="highScores"></div>
-    <div id="questions"></div>
+    <input id="view-scores" type="button" value="View Scores" />
+    <span id="timer">Time: 0</span>
+    <div id="scores-div"></div>
+    <div id="question-div"></div>
     <div id="choices"></div>
-    <div id="results"></div>
+    <form id="results"></form>
     <div id="buttons">
-      <input type="button" value="Start Quiz!" id="startBtn"/>
+      <input id="start-button" type="button" value="Start Quiz" />
     </div>
-
-    <script src="./assets/js/codingQuestions.js"></script>
-    <script src="./assets/js/index.js"></script>
+    <script src="assets/js/questions.js"></script>
+    <script src="assets/js/index.js"></script>
   </body>
 </html>

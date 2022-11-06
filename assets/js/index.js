@@ -1,56 +1,56 @@
-let secondsLeft = 70;
+// ALL VARIABLES
+let secondsLeft = 75;
+let time = document.getElementById("time");
+let scoresEl = document.getElementById("scores-div");
+let buttonsEl = document.getElementById("buttons");
+let viewScoresBtn = document.getElementById("view-scores");
+let startBtn = document.getElementById("start-button");
+startBtn.addEventListener("click", setTime);
 
-let timeEl = document.getElementById("time");
-let hsEl = document.getElementById("highScores");
-let btnsEl = document.getElementById("buttons");
-let vsBtn = document.getElementById("viewScores");
-let questionEl = document.getElementById("questions");
+let questionEl = document.getElementById("question-div");
 let resultsEl = document.getElementById("results");
 let choicesEl = document.getElementById("choices");
 
-let startBtnEl = document.getElementById("startBtn");
-alert('button pressed!')
-startBtnEl.addEventListener("click", setTimer);
-
-let questionCount = 0;
+var questionCount = 0;
 let score = 0;
 
-function setTimer() {
+function setTime() {
   displayQuestions();
   let timerInterval = setInterval(function () {
     secondsLeft--;
-    timeEl.textContent = "";
-    timeEl.textContent = "Time: " + secondsLeft;
-    if (secondsLeft <= 0 || questionCount === codingQuestions.length) {
+    time.textContent = "";
+    time.textContent = "Time: " + secondsLeft;
+    if (secondsLeft <= 0 || questionCount === questions.length) {
       clearInterval(timerInterval);
+      captureUserScore();
     }
   }, 1000);
-}
+};
 
 function displayQuestions() {
-  removeEls(startBtnEl);
+  removeEls(startBtn);
 
   if (questionCount < questions.length) {
-    questionEl.innerHTML = codingQuestions[questionCount].title;
+    questionEl.innerHTML = questions[questionCount].question;
     choicesEl.textContent = "";
 
-    for (let i = 0; i < codingQuestions[questionCount].answers.length; i++) {
+    for (let i = 0; i < questions[questionCount].answers.length; i++) {
       let el = document.createElement("button");
-      el.innerText = codingQuestions[questionCount].answers[i];
+      el.innerText = questions[questionCount].answers[i];
       el.setAttribute("data-id", i);
       el.addEventListener("click", function (event) {
         event.stopPropagation();
 
-        if (el.innerText === codingQuestions[questionCount].answer) {
+        if (el.innerText === questions[questionCount].correctAnswer) {
           score += secondsLeft;
         } else {
           score -= 10;
-          secondsLeft = secondsLeft - 10;
+          secondsLeft = secondsLeft - 15;
         }
 
         questionEl.innerHTML = "";
 
-        if (questionCount === codingQuestions.length) {
+        if (questionCount === questions.length) {
           return;
         } else {
           questionCount++;
@@ -60,4 +60,105 @@ function displayQuestions() {
       choicesEl.append(el);
     }
   }
+};
+
+function captureUserScore() {
+  time.remove();
+  choicesEl.textContent = "";
+
+  let initialsInput = document.createElement("input");
+  let postScoreBtn = document.createElement("input");
+
+  resultsEl.innerHTML = `You scored ${score} points! Enter initials: `;
+  initialsInput.setAttribute("type", "text");
+  postScoreBtn.setAttribute("type", "button");
+  postScoreBtn.setAttribute("value", "Post My Score!");
+  postScoreBtn.addEventListener("click", function (event) {
+    event.preventDefault();
+    let scoresArray = defineScoresArray(storedArray, emptyArray);
+
+    let initials = initialsInput.value;
+    let userAndScore = {
+      initials: initials,
+      score: score,
+    };
+
+    scoresArray.push(userAndScore);
+    saveScores(scoresArray);
+    displayAllScores();
+    clearScoresBtn();
+    goBackBtn();
+    viewScoresBtn.remove();
+  });
+  resultsEl.append(initialsInput);
+  resultsEl.append(postScoreBtn);
+};
+
+const saveScores = (array) => {
+  window.localStorage.setItem("highScores", JSON.stringify(array));
+};
+
+const defineScoresArray = (arr1, arr2) => {
+  if (arr1 !== null) {
+    return arr1;
+  } else {
+    return arr2;
+  }
+};
+
+const removeEls = (...els) => {
+  for (let el of els) el.remove();
+};
+
+
+let emptyArray = [];
+let storedArray = JSON.parse(window.localStorage.getItem("highScores"));
+
+function displayAllScores() {
+  removeEls(time, startBtn, resultsEl);
+  let scoresArray = defineScoresArray(storedArray, emptyArray);
+
+  scoresArray.forEach((obj) => {
+    let initials = obj.initials;
+    let storedScore = obj.score;
+    let resultsP = document.createElement("p");
+    resultsP.innerText = `${initials}: ${storedScore}`;
+    scoresEl.append(resultsP);
+  });
 }
+
+function viewScores() {
+  viewScoresBtn.addEventListener("click", function (event) {
+    event.preventDefault();
+    removeEls(time, startBtn);
+    displayAllScores();
+    removeEls(viewScoresBtn);
+    clearScoresBtn();
+    goBackBtn();
+  });
+}
+
+function clearScoresBtn() {
+  let clearBtn = document.createElement("input");
+  clearBtn.setAttribute("type", "button");
+  clearBtn.setAttribute("value", "Clear Scores");
+  clearBtn.addEventListener("click", function (event) {
+    event.preventDefault();
+    removeEls(scoresEl);
+    window.localStorage.removeItem("highScores");
+  });
+  scoresEl.append(clearBtn);
+}
+
+function goBackBtn() {
+  let backBtn = document.createElement("input");
+  backBtn.setAttribute("type", "button");
+  backBtn.setAttribute("value", "Go Back");
+  backBtn.addEventListener("click", function (event) {
+    event.preventDefault();
+    window.location.reload();
+  });
+  buttonsEl.append(backBtn);
+}
+
+viewScores();
