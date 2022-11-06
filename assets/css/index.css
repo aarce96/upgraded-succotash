@@ -1,0 +1,30 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+#card-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+#card-body {
+  padding: 0 50px;
+  margin: 25px;
+}
+
+#question-div {
+  text-align: center;
+}
+
+#choices {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+#buttons {
+  text-align: center;
+}
